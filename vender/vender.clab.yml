@@ -1,0 +1,46 @@
+name: vender
+
+mgmt:
+  network: vender_mgmt
+  ipv4-subnet: 172.30.0.0/24
+  ipv6-subnet: 2001:172:30::/80
+
+topology:
+  nodes:
+    R1:
+      kind: cisco_xrd
+      image: xrd-control-plane:latest
+      mgmt-ipv4: 172.30.0.2
+      mgmt-ipv6: 2001:172:30::2
+      startup-config: configs/R1.cfg
+    R2:
+      kind: cisco_c8000v
+      image: c8000v:latest
+      mgmt-ipv4: 172.30.0.3
+      mgmt-ipv6: 2001:172:30::3
+      startup-config: configs/R2.cfg
+    R3:
+      kind: cisco_iol
+      image: cisco_iol:latest
+      mgmt-ipv4: 172.30.0.4
+      mgmt-ipv6: 2001:172:30::4
+      startup-config: configs/R3.cfg
+    R4:
+      kind: juniper_cjunosevolved
+      image: cjunosevolved:latest
+      mgmt-ipv4: 172.30.0.5
+      mgmt-ipv6: 2001:172:30::5
+      startup-config: configs/R4.cfg
+    R5:
+      kind: arista_ceos
+      image: ceos:latest
+      mgmt-ipv4: 172.30.0.6
+      mgmt-ipv6: 2001:172:30::6
+      startup-config: configs/R5.cfg
+
+  links:
+    - endpoints: ["R1:Gi0-0-0-0", "R2:eth1"]
+    - endpoints: ["R2:eth2", "R3:eth1"]
+    - endpoints: ["R3:eth2", "R4:eth4"]
+    - endpoints: ["R4:eth5", "R5:eth1"]
+    - endpoints: ["R1:Gi0-0-0-1", "R5:eth2"]
